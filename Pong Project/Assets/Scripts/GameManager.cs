@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +9,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] Text Score1;
     [SerializeField] Text Score2;
     [SerializeField] Ball ball;
+
+    AudioSource audioSource;
+    [SerializeField] AudioClip scoreClip;
 
     enum GameState { Start, Play, Serve, Done }
     GameState state = GameState.Start;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         state = GameState.Start;
     }
 
@@ -80,8 +82,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void PlaySound(AudioClip song)
+    {
+        audioSource.PlayOneShot(song);
+    }
+
     public void HandleScored(int playerNumber)
     {
+        PlaySound(scoreClip);
+
         if (playerNumber == 1)
         {
             player1Score++;
@@ -112,6 +121,6 @@ public class GameManager : MonoBehaviour
     void FinishGame(int player)
     {
         state = GameState.Done;
-        text.text = "Player " + player + "Win!";
+        text.text = "Player " + player + " Win!";
     }
 }

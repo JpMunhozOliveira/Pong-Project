@@ -3,10 +3,13 @@ using UnityEngine;
 [RequireComponent(typeof(Boundaries))]
 public class Ball : MonoBehaviour
 {
-    float ball_speed = 6f;
+    [SerializeField] float ball_speed = 6f;
     float dx;
     float dy;
     Boundaries border;
+
+    [SerializeField] AudioClip hitWall;
+    [SerializeField] AudioClip hitPaddle;
 
     private void Start()
     {
@@ -27,6 +30,8 @@ public class Ball : MonoBehaviour
         if (transform.position.y <= border.ScreenBounds.y * -1 - border.ObjectHeight || transform.position.y >= border.ScreenBounds.y + border.ObjectHeight)
         {
             dy = -dy;
+
+            GameManager.instance.PlaySound(hitWall);
         }
     }
 
@@ -51,7 +56,10 @@ public class Ball : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        GameManager.instance.PlaySound(hitPaddle);
+
         dx = -dx;
+        ball_speed *= 1.03f;
 
         if (dy < 0)
         {
